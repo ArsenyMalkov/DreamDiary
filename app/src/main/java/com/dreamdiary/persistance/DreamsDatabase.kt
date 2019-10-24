@@ -14,7 +14,7 @@ abstract class DreamsDatabase : RoomDatabase() {
 
         @Volatile private var INSTANCE: DreamsDatabase? = null
 
-        fun getInstace(context: Context): DreamsDatabase =
+        fun getInstance(context: Context): DreamsDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also{ INSTANCE = it }
             }
