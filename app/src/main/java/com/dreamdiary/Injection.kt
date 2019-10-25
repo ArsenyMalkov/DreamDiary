@@ -3,7 +3,7 @@ package com.dreamdiary
 import android.content.Context
 import com.dreamdiary.persistance.DreamDao
 import com.dreamdiary.persistance.DreamsDatabase
-import androidx.lifecycle.ViewModelProviders
+import com.dreamdiary.ui.main.ViewModelFactory
 
 object Injection {
 
