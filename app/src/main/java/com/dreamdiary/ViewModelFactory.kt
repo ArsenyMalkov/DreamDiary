@@ -1,8 +1,9 @@
-package com.dreamdiary.ui.main
+package com.dreamdiary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dreamdiary.persistance.DreamDao
+import com.dreamdiary.ui.main.MainViewModel
 
 class ViewModelFactory(private val dataSource: DreamDao) : ViewModelProvider.Factory {
 
