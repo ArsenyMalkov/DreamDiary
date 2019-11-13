@@ -15,6 +15,8 @@ import com.dreamdiary.persistance.Dream
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dream_item.view.*
 import kotlinx.android.synthetic.main.main_fragment.*
+import android.content.Context
+
 
 class MainFragment : Fragment() {
 
@@ -31,6 +33,12 @@ class MainFragment : Fragment() {
 
     private val disposable = CompositeDisposable()
 
+    private var listener: OnAddDreamListener? = null
+
+    interface OnAddDreamListener {
+        fun onAddDreamListener()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +50,9 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dreamRecyclerView.adapter = dreamAdapter
+        fab.setOnClickListener {
+            listener?.onAddDreamListener()
+        }
     }
 
     override fun onStart() {
@@ -52,6 +63,15 @@ class MainFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         disposable.clear()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnAddDreamListener) {
+            listener = context
+        } else {
+            throw ClassCastException("$context must implement $TAG.OnAddDreamListener")
+        }
     }
 
     class DreamAdapter : PagedListAdapter<Dream, DreamAdapter.DreamViewHolder>(DIFF_CALLBACK) {

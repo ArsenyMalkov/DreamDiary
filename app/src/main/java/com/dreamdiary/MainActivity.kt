@@ -2,9 +2,10 @@ package com.dreamdiary
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.dreamdiary.ui.main.AddDreamFragment
 import com.dreamdiary.ui.main.MainFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainFragment.OnAddDreamListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -14,6 +15,12 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    override fun onAddDreamListener() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, AddDreamFragment.newInstance())
+            .commitNow()
     }
 
 }
