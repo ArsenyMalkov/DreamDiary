@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dreamdiary.Injection
 import com.dreamdiary.R
+import com.dreamdiary.persistance.Dream
+import kotlinx.android.synthetic.main.fragment_add_dream.*
 
 class AddDreamFragment : Fragment() {
 
@@ -34,6 +36,17 @@ class AddDreamFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        btnAdd.setOnClickListener {
+            val dream = Dream(
+                title = etTitle.text.toString(),
+                date = etDate.text.toString().toLong(),
+                content = etContent.text.toString()
+            )
+            viewModel.updateDream(dream).subscribe { requireActivity().supportFragmentManager.popBackStack() }
+//            requireActivity().supportFragmentManager.popBackStack()
+//            Toast.makeText(requireContext(), "New Dream was Added", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

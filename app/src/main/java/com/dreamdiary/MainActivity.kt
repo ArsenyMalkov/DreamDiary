@@ -19,8 +19,9 @@ class MainActivity : AppCompatActivity(), MainFragment.OnAddDreamListener {
 
     override fun onAddDreamListener() {
         supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
             .replace(R.id.container, AddDreamFragment.newInstance())
-            .commitNow()
+            .commit()
     }
 
 }
