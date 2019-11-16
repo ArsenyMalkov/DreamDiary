@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.dreamdiary.Injection
 import com.dreamdiary.R
 import com.dreamdiary.persistance.Dream
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_add_dream.*
 
 class AddDreamFragment : Fragment() {
@@ -20,11 +21,6 @@ class AddDreamFragment : Fragment() {
 
     private val viewModel by viewModels<MainViewModel> {
         Injection.provideViewModelFactory(requireContext())
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -43,9 +39,9 @@ class AddDreamFragment : Fragment() {
                 date = etDate.text.toString().toLong(),
                 content = etContent.text.toString()
             )
-            viewModel.updateDream(dream).subscribe { requireActivity().supportFragmentManager.popBackStack() }
-//            requireActivity().supportFragmentManager.popBackStack()
-//            Toast.makeText(requireContext(), "New Dream was Added", Toast.LENGTH_SHORT).show()
+            viewModel.updateDream(dream)
+                .subscribeOn(Schedulers.io())
+                .subscribe { requireActivity().supportFragmentManager.popBackStack() }
         }
     }
 
