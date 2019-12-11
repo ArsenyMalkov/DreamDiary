@@ -105,7 +105,8 @@ class MainFragment : Fragment() {
         )
     ) {
         fun bindTo(dream: Dream?) {
-            itemView.tv_title.text = dream?.title
+            itemView.tvTitle.text = dream?.title
+            itemView.tvDate.text = dream?.date.toString()
         }
     }
 
