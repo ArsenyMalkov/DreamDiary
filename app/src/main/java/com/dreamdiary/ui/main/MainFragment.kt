@@ -30,15 +30,15 @@ class MainFragment : Fragment() {
         Injection.provideViewModelFactory(requireContext())
     }
 
-    private val dreamAdapter = DreamAdapter()
+    private var fragmentToActivityListener: FragmentToActivityListener? = null
 
-    private val disposable = CompositeDisposable()
-
-    private var listener: OnAddDreamListener? = null
-
-    interface OnAddDreamListener {
+    interface FragmentToActivityListener {
         fun onAddDreamListener()
+        fun onClickDreamListener()
     }
+
+    private val dreamAdapter = DreamAdapter()
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +52,9 @@ class MainFragment : Fragment() {
 
         dreamRecyclerView.adapter = dreamAdapter
         dreamRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         fab.setOnClickListener {
-            listener?.onAddDreamListener()
+            fragmentToActivityListener?.onAddDreamListener()
         }
     }
 
@@ -69,45 +70,60 @@ class MainFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnAddDreamListener) {
-            listener = context
+        if (context is FragmentToActivityListener) {
+            fragmentToActivityListener = context
+            dreamAdapter.fragmentToActivityListener = fragmentToActivityListener
         } else {
             throw ClassCastException("$context must implement $TAG.OnAddDreamListener")
         }
     }
+}
 
-    class DreamAdapter : PagedListAdapter<Dream, DreamViewHolder>(diffCallback) {
+class DreamAdapter :
+    PagedListAdapter<Dream, DreamViewHolder>(diffCallback) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamViewHolder =
-            DreamViewHolder(parent)
+    var fragmentToActivityListener: MainFragment.FragmentToActivityListener? = null
 
-        override fun onBindViewHolder(holder: DreamViewHolder, position: Int) {
-            holder.bindTo(getItem(position))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamViewHolder =
+        DreamViewHolder(parent, fragmentToActivityListener)
 
-        companion object {
-            private val diffCallback = object : DiffUtil.ItemCallback<Dream>() {
-                override fun areItemsTheSame(oldDream: Dream, newDream: Dream): Boolean =
-                    oldDream.id == newDream.id
-
-                override fun areContentsTheSame(oldDream: Dream, newDream: Dream): Boolean =
-                    oldDream == newDream
-            }
-        }
-
+    override fun onBindViewHolder(holder: DreamViewHolder, position: Int) {
+        holder.bindTo(getItem(position))
     }
 
-    class DreamViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-            R.layout.dream_item,
-            parent,
-            false
-        )
-    ) {
-        fun bindTo(dream: Dream?) {
-            itemView.tvTitle.text = dream?.title
-            itemView.tvDate.text = dream?.date.toString()
+    companion object {
+        private val diffCallback = object : DiffUtil.ItemCallback<Dream>() {
+            override fun areItemsTheSame(oldDream: Dream, newDream: Dream): Boolean =
+                oldDream.id == newDream.id
+
+            override fun areContentsTheSame(oldDream: Dream, newDream: Dream): Boolean =
+                oldDream == newDream
         }
     }
 
+}
+
+class DreamViewHolder(
+    parent: ViewGroup,
+    private val fragmentToActivityListener: MainFragment.FragmentToActivityListener?
+) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(
+        R.layout.dream_item,
+        parent,
+        false
+    )
+), View.OnClickListener {
+
+    init {
+        itemView.setOnClickListener(this)
+    }
+
+    fun bindTo(dream: Dream?) {
+        itemView.tvTitle.text = dream?.title
+        itemView.tvDate.text = dream?.date.toString()
+    }
+
+    override fun onClick(v: View?) {
+        fragmentToActivityListener?.onClickDreamListener()
+    }
 }

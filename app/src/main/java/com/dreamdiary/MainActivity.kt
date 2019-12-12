@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.dreamdiary.ui.main.AddDreamFragment
 import com.dreamdiary.ui.main.MainFragment
 
-class MainActivity : AppCompatActivity(), MainFragment.OnAddDreamListener {
+class MainActivity : AppCompatActivity(), MainFragment.FragmentToActivityListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +18,13 @@ class MainActivity : AppCompatActivity(), MainFragment.OnAddDreamListener {
     }
 
     override fun onAddDreamListener() {
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.container, AddDreamFragment.newInstance())
+            .commit()
+    }
+
+    override fun onClickDreamListener() {
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.container, AddDreamFragment.newInstance())
