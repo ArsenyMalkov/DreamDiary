@@ -3,6 +3,7 @@ package com.dreamdiary
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.dreamdiary.ui.main.AddDreamFragment
+import com.dreamdiary.ui.main.DreamDetailsFragment
 import com.dreamdiary.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity(), MainFragment.FragmentToActivityListener {
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity(), MainFragment.FragmentToActivityListene
     override fun onClickDreamListener() {
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
-            .replace(R.id.container, AddDreamFragment.newInstance())
+            .replace(R.id.container, DreamDetailsFragment.newInstance())
             .commit()
     }
 
